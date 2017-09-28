@@ -15,6 +15,6 @@ rem       <nom jar>   <nom class amb main()>   <llista de classes! .............
 jar -cvfe HolaMon.jar edu.iesmila.p1.HolaMon .\edu\iesmila\p1\*.class
 
 rem movemn el jar a la carpeta anterior
-mv HolaMon.jar ..\HolaMon.jar
+mv HolaMon.jar ../HolaMon.jar
 
 pause
