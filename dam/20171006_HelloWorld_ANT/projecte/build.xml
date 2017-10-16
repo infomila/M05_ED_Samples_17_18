@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="ElMeuProjecte" default="dist" basedir=".">
+    <description>
+         Guió Ant senzill
+    </description> 
+  <!--paràmetres goblals del guió -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="nom_jar"  value="SUPERJANDERKLANDER"/>
+
+  <target name="init">
+    <!-- Crea una marca de temps -->
+    <tstamp/>
+    <!--Crea el directori temporal de compilació -->
+    <mkdir dir="${build}"/> <!--fixeu-vos en l’us de les propietats! -->
+  </target>
+
+  <target name="compile" depends="init"
+        description="compilar els fonts " >
+    <!--Compila totes les fonts del ${src} cap a ${build} -->
+    <javac srcdir="${src}" destdir="${build}"/>
+  </target>
+
+  <target name="dist" depends="compile"
+        description="generar la distribució " >
+    <!--Crea el directori de distribució  -->
+    <mkdir dir="${dist}/lib"/>
+
+    <!--Crea un jar del que hi ha dins de ${build}  anomenant-lo ElMeuProjecte-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/${nom_jar}-${DSTAMP}.jar" basedir="${build}">
+       <manifest>
+         <attribute name="Main-Class" value="HolaMon"/>
+       </manifest>
+    </jar>
+  </target>
+
+  <target name="clean"
+        description="netejar" >
+    <!--Esborra els directoris ${build} i ${dist} , incloent subdirectoris fills-->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
