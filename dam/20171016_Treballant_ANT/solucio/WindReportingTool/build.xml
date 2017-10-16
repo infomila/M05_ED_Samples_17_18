@@ -35,17 +35,11 @@
         <move file="${dist.jar}" 
               tofile="${dist.dir}/Renombrat.jar"/>   
         
-        <input message="Vol fer un FTP?" validargs="SI,NO" defaultvalue="NO"
-               addproperty="opcioFTP">
-        </input>
-       
 
         <property name="rutaAData" location="data"></property>
         <property name="nomData"      value="data"></property>
 
-        <input message="Introduir password servidor FTP" 
-               addproperty="FTP.password">
-        </input>
+  
 
         <echo message="rutaAData:${rutaAData}"></echo>
         <echo message="nomData:${nomData}"></echo>
