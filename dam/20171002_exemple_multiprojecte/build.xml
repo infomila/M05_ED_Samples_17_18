@@ -10,7 +10,49 @@
 <project name="20171002_exemple_multiprojecte" default="default" basedir=".">
     <description>Builds, tests, and runs the project 20171002_exemple_multiprojecte.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--
+    
+    
+    <target name="Saluda" description="Tasca de salutació">
+        
+        <echo message="Hola Món"></echo>
+        
+        <property name="cadena" value="AX523"></property>            
+        <echo message="La cadena val ${cadena}"></echo>
+        
+        <property name="rutaAlPdf" location="prova.pdf" ></property>
+        <echo message="La rutaAlPdf val ${rutaAlPdf}"></echo>
+        
+        
+        
+    </target>
+    
+    <target name="-pre-jar" >        
+        <echo message="Abans del jar"></echo>
+    </target>
+    <target name="-post-jar" >        
+        <echo message="Després del jar"></echo>
+        <echo message=">Canvi de nom del jar"></echo>
+        <move file="${dist.jar}" 
+              tofile="${dist.dir}/NomCanviat.jar"/>
+        <property file="FTP.properties"></property>
+        <echo message="La IP val: ${FTP.IP}"></echo>
+        <echo message="El user val: ${FTP.user}"></echo>
+        <echo message="El password val: ${FTP.password}"></echo>
+        <echo message="El port val: ${FTP.port}"></echo>
+        
+          <ftp server="${FTP.IP}"
+                port="${FTP.port}"
+                remotedir="/"
+                userid="${FTP.user}"
+                password="${FTP.password}"
+                passive="yes"
+                binary="yes">
+             <fileset  file="${dist.dir}/NomCanviat.jar">
+             </fileset>
+           </ftp>
+
+             </target>
+             <!--
 
     There exist several targets which are by default empty and which can be 
     used for execution of your tasks. These targets are usually executed 
