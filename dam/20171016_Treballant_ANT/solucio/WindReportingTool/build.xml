@@ -10,6 +10,66 @@
 <project name="WindReportingTool" default="default" basedir=".">
     <description>Builds, tests, and runs the project WindReportingTool.</description>
     <import file="nbproject/build-impl.xml"/>
+    
+    
+    
+    
+
+    <!-- ********************* -->
+    <target name="Saluda" description="Saluda molt bé" depends="-init-project">
+        
+        <echo message="Hola Món Des d'ANT"></echo>
+        
+        <echo message="dist.dir: ${dist.dir}"></echo>
+                
+    </target>
+    
+    <target name="-pre-jar" >
+        <echo message="Executat abans de fer el jar"></echo>
+    </target>
+        
+    <target name="-post-jar" >
+        <echo message="Canviar nom del jar"></echo>
+         <!--move file="dist/WindReportingTool.jar" 
+               tofile="dist/Renombrat.jar"/-->     
+        <move file="${dist.jar}" 
+              tofile="${dist.dir}/Renombrat.jar"/>   
+        
+        <input message="Vol fer un FTP?" validargs="SI,NO" defaultvalue="NO"
+               addproperty="opcioFTP">
+        </input>
+       
+
+        <property name="rutaAData" location="data"></property>
+        <property name="nomData"      value="data"></property>
+
+        <input message="Introduir password servidor FTP" 
+               addproperty="FTP.password">
+        </input>
+
+        <echo message="rutaAData:${rutaAData}"></echo>
+        <echo message="nomData:${nomData}"></echo>
+
+        <property file="FTP.properties"></property>
+        <echo message="IP: ${FTP.IP}"></echo>
+        <echo message="User: ${FTP.user}"></echo>
+        <echo message="Password: ${FTP.password}"></echo>
+        <echo message="Port: ${FTP.port}"></echo>
+
+        <ftp 
+                server="${FTP.IP}"
+                port="${FTP.port}"
+                remotedir="/"
+                userid="${FTP.user}"
+                password="${FTP.password}"
+                passive="yes"
+                binary="true"
+            >
+            <fileset file="${dist.dir}/Renombrat.jar" ></fileset>
+        </ftp>
+
+
+    </target>    
     <!--
 
     There exist several targets which are by default empty and which can be 
