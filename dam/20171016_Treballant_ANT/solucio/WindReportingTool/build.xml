@@ -11,7 +11,11 @@
     <description>Builds, tests, and runs the project WindReportingTool.</description>
     <import file="nbproject/build-impl.xml"/>
     
-    
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+          <pathelement location="lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
     
     
 
@@ -39,28 +43,38 @@
         <property name="rutaAData" location="data"></property>
         <property name="nomData"      value="data"></property>
 
-  
+        <input message="Vol fer un FTP del jar?" 
+                validargs="SI,NO" 
+                defaultvalue="NO"
+               addproperty="FTPactiu">
+        </input>
 
-        <echo message="rutaAData:${rutaAData}"></echo>
-        <echo message="nomData:${nomData}"></echo>
+        <if>
+            <equals arg1="${FTPactiu}" arg2="SI"></equals>
+            <then>
+                <echo message="rutaAData:${rutaAData}"></echo>
+                <echo message="nomData:${nomData}"></echo>
 
-        <property file="FTP.properties"></property>
-        <echo message="IP: ${FTP.IP}"></echo>
-        <echo message="User: ${FTP.user}"></echo>
-        <echo message="Password: ${FTP.password}"></echo>
-        <echo message="Port: ${FTP.port}"></echo>
+                <property file="FTP.properties"></property>
+                <echo message="IP: ${FTP.IP}"></echo>
+                <echo message="User: ${FTP.user}"></echo>
+                <echo message="Password: ${FTP.password}"></echo>
+                <echo message="Port: ${FTP.port}"></echo>
 
-        <ftp 
-                server="${FTP.IP}"
-                port="${FTP.port}"
-                remotedir="/"
-                userid="${FTP.user}"
-                password="${FTP.password}"
-                passive="yes"
-                binary="true"
-            >
-            <fileset file="${dist.dir}/Renombrat.jar" ></fileset>
-        </ftp>
+                <ftp 
+                        server="${FTP.IP}"
+                        port="${FTP.port}"
+                        remotedir="/"
+                        userid="${FTP.user}"
+                        password="${FTP.password}"
+                        passive="yes"
+                        binary="true"
+                    >
+                    <fileset file="${dist.dir}/Renombrat.jar" ></fileset>
+                </ftp>
+            </then>
+        </if>
+        
 
 
     </target>    
