@@ -1,2 +1,0 @@
-BEACHES=Barceloneta, Bogatell, Cabrera, Calade-Santa-Cristina, Comandancia, Desembocaduradel-Tordera, Masnou, Empuriabrava, Garraf, La-Rotonda, Latigo, Miami-Platja, Montgat, Nova-Mar-Bella-Barcelona, Peyo-s, Platja-de-Sant-Pol, Playade-Premia, Playade-Sant-Sebastia, Port-de-Mataro, Port-Ginesta-Castelldefels, Roc-San-Cayetano, Saint-Andreu-de-Llavaneres, Sant-Marti, Segur-de-Calafell, Torre-Bank, Vilassar        
- 

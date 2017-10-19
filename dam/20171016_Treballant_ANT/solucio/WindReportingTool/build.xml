@@ -49,6 +49,7 @@
                addproperty="FTPactiu">
         </input>
 
+
         <if>
             <equals arg1="${FTPactiu}" arg2="SI"></equals>
             <then>
