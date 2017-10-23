@@ -1,0 +1,3 @@
+BEACHES=La-Salvaje,Deba,Guibeleco,Hondarribia,Islade-Izaro,Karramarro,La-Concha,Menakoz,Mundaka,Mutriku,Orio,Orrua,Pena-Roja,Playade-Aizkorri,Playade-Arrietara,Playade-Arrigunaga,Playade-Barrika,Playade-Ereaga,Playade-Gaztetape,Playade-Gros,Playade-Karraspio,Playade-Laga,Playade-Laida,Playade-Ogeia,Playade-Ondarreta_Pikua,Playade-Ondarreta_Picodel-Tenis,Plentzia,Punta-Galea,Roca-Puta,Sopelana,Zarautz,Zumaya
+
+ 
