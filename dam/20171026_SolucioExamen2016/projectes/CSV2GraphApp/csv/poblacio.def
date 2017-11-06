@@ -1,0 +1,4 @@
+CHART.CSV=csv/poblacio.csv 
+CHART.TITLE_X=Poblacions
+CHART.TITLE_Y=Num.habitants
+CHART.SUBTITLE=(per província) 

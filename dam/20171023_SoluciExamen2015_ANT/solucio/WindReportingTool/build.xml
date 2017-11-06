@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!-- By default, only the Clean and Build commands use this build script. -->
+<!-- Commands such as Run, Debug, and Test only use this build script if -->
+<!-- the Compile on Save feature is turned off for the project. -->
+<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
+<!-- in the project's Project Properties dialog box.-->
+<project name="WindReportingTool" default="default" basedir=".">
+    <description>Builds, tests, and runs the project WindReportingTool.</description>
+    <import file="nbproject/build-impl.xml"/>
+    
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+          <pathelement location="lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+    
+    <!-- Exercici 4 -->
+    <target name="-post-jar">
+        <copy todir="${dist.dir}/data">
+            <fileset dir="data"/>
+        </copy>
+        <mkdir dir="${dist.dir}/output"/>
+        <jar jarfile="${dist.jar}" update="true">
+            <zipgroupfileset dir="lib" 
+                             includes="**/*.jar">
+            </zipgroupfileset>
+        </jar>
+        <delete dir="${dist.dir}/lib"></delete>
+    </target>    
+    
+    <target name="GeneraInforme" depends="compile" description="XX">
+        
+        <!--antcall target="compile"/-->
+        <input 
+            message="Trii una opció:"
+            validargs="Fer un informe,Fer tots els informes"
+            defaultvalue="Fer un informe"
+            addproperty="opcioTriada"
+        >
+        </input>
+        
+        <if>
+            <equals arg1="${opcioTriada}" arg2="Fer un informe"></equals>
+            <then>
+                <!-- 1. Demanarà a l’usuari que escrigui el nom
+             de l’arxiu que cal utilitzar (p.ex. “catalunya” ) -->
+             <input message="Indiqueu l'arxiu a processar"
+                    addproperty="arxiu">
+             </input>
+                <!--2. Executarà l’aplicació, passant com a argument
+             d’execució el nom de l’arxiu que l’usuari ha indicat. -->
+             <java jar="${dist.jar}">
+                 <arg value="${arxiu}"/>
+             </java>
+            </then>
+            <else>
+                <get src="http://92.222.27.83/~bernat/ftp.config"
+                dest="."/>
+                <property file="ftp.config"></property> 
+                <ftp action="get"
+                server="${FTP.IP}"
+                userid="${FTP.USER}"
+                password="${FTP.PASSWORD}"
+                remoteDir="ExamenEDUF1"                
+                >
+                    <fileset dir="data">
+                        <include name="**/*.txt"/>
+                    </fileset>
+                </ftp>
+                <!-- aquí hem de recórrer la llista d'arxius *.txt
+                  que hi ha data -->
+                <foreach target="hola" param="arxiu">
+                    <fileset dir="data">
+                        <include name="**/*.txt"/>
+                    </fileset>
+                </foreach>
+
+                <!-- c) -->
+                 <tstamp>
+                   <format property="dia" pattern="yyyy_dd_MM" />
+                 </tstamp>
+                 <property name="nomArxiuEnzipat" 
+                           value="Reports_${dia}_Orellana_Bernat.zip">
+                 </property>
+                 <zip destfile="${nomArxiuEnzipat}"
+                    basedir="output"
+                 />
+                 <!-- d) -->
+                 <ftp action="put"
+                             server="${FTP.IP}"
+                             userid="${FTP.USER}"
+                             password="${FTP.PASSWORD}"
+                             remoteDir="ExamenEDUF1"                
+                             >        
+                                 <fileset file="${nomArxiuEnzipat}" ></fileset>
+                </ftp>
+                                               
+            </else>
+        </if>
+ 
+    
+    
+    
+    </target>
+    
+    <target name="hola">
+        <property file="nbproject/project.properties"></property>
+        <basename property="nomNomes" file="${arxiu}"/>
+        <echo message="- Processant [${nomNomes}]"></echo>
+        <java jar="${dist.jar}">
+                 <arg value="${nomNomes}"/>
+        </java>
+    </target>
+    
+    
+    <!--
+    <target name="Saluda" description="Saluda molt bé" depends="-init-project">
+        
+        <echo message="Hola Món Des d'ANT"></echo>
+        
+        <echo message="dist.dir: ${dist.dir}"></echo>
+                
+    </target>
+    
+    <target name="-pre-jar" >
+        <echo message="Executat abans de fer el jar"></echo>
+    </target>
+        
+    <target name="-post-jar" >
+        <echo message="Canviar nom del jar"></echo>
+       
+        <move file="${dist.jar}" 
+              tofile="${dist.dir}/Renombrat.jar"/>   
+        
+
+        <property name="rutaAData" location="data"></property>
+        <property name="nomData"      value="data"></property>
+
+        <input message="Vol fer un FTP del jar?" 
+                validargs="SI,NO" 
+                defaultvalue="NO"
+               addproperty="FTPactiu">
+        </input>
+
+
+        <if>
+            <equals arg1="${FTPactiu}" arg2="SI"></equals>
+            <then>
+                <echo message="rutaAData:${rutaAData}"></echo>
+                <echo message="nomData:${nomData}"></echo>
+
+                <property file="FTP.properties"></property>
+                <echo message="IP: ${FTP.IP}"></echo>
+                <echo message="User: ${FTP.user}"></echo>
+                <echo message="Password: ${FTP.password}"></echo>
+                <echo message="Port: ${FTP.port}"></echo>
+
+                <ftp 
+                        server="${FTP.IP}"
+                        port="${FTP.port}"
+                        remotedir="/"
+                        userid="${FTP.user}"
+                        password="${FTP.password}"
+                        passive="yes"
+                        binary="true"
+                    >
+                    <fileset file="${dist.dir}/Renombrat.jar" ></fileset>
+                </ftp>
+            </then>
+        </if>
+        
+
+
+    </target>      -->
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
+
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar:                  JAR building
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
+
+    An example of overriding the target for project execution could look like this:
+
+        <target name="run" depends="WindReportingTool-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
+</project>

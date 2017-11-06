@@ -1,0 +1,278 @@
+Index: src/main/java/math/geom2d/Box2D.java
+===================================================================
+--- src/main/java/math/geom2d/Box2D.java	(revision 375)
++++ src/main/java/math/geom2d/Box2D.java	(working copy)
+@@ -28,7 +28,13 @@
+ package math.geom2d;
+ 
+ // Imports
+-import static java.lang.Double.*;
++import static java.lang.Double.min;
++import static java.lang.Double.max;
++import static java.lang.Double.NEGATIVE_INFINITY;
++import static java.lang.Double.POSITIVE_INFINITY;
++import static java.lang.Double.isInfinite;
++import static java.lang.Double.isNaN;
++
+ import java.awt.Graphics2D;
+ import java.util.ArrayList;
+ import java.util.Collection;
+Index: src/main/java/math/geom2d/circulinear/BoundaryPolyCirculinearCurve2D.java
+===================================================================
+--- src/main/java/math/geom2d/circulinear/BoundaryPolyCirculinearCurve2D.java	(revision 375)
++++ src/main/java/math/geom2d/circulinear/BoundaryPolyCirculinearCurve2D.java	(working copy)
+@@ -46,7 +46,7 @@
+      */
+ 	public static <T extends CirculinearContinuousCurve2D> 
+ 	BoundaryPolyCirculinearCurve2D<T>
+-	create(Collection<T> curves) {
++	createBoundaryPolyCirculinearCurve2D(Collection<T> curves) {
+ 		return new BoundaryPolyCirculinearCurve2D<T>(curves);
+ 	}
+ 
+@@ -57,7 +57,7 @@
+      */
+ 	public static <T extends CirculinearContinuousCurve2D> 
+ 	BoundaryPolyCirculinearCurve2D<T>
+-	create(Collection<T> curves, boolean closed) {
++	createBoundaryPolyCirculinearCurve2D(Collection<T> curves, boolean closed) {
+ 		return new BoundaryPolyCirculinearCurve2D<T>(curves, closed);
+ 	}
+ 
+@@ -157,7 +157,7 @@
+ 	public CirculinearRing2D parallel(double dist) {
+ 		BufferCalculator bc = BufferCalculator.getDefaultInstance();
+ 
+-    	return GenericCirculinearRing2D.create(
++    	return GenericCirculinearRing2D.createGenericCirculinearRing2D(
+     			bc.createContinuousParallel(this, dist).smoothPieces());
+     }
+     
+Index: src/main/java/math/geom2d/circulinear/CirculinearCurves2D.java
+===================================================================
+--- src/main/java/math/geom2d/circulinear/CirculinearCurves2D.java	(revision 375)
++++ src/main/java/math/geom2d/circulinear/CirculinearCurves2D.java	(working copy)
+@@ -620,7 +620,7 @@
+ 
+ 			// create continuous curve formed only by circulinear elements
+ 			// and add it to the set of curves
+-			contours.add(BoundaryPolyCirculinearCurve2D.create(elements, true));
++			contours.add(BoundaryPolyCirculinearCurve2D.createBoundaryPolyCirculinearCurve2D(elements, true));
+ 		}
+ 
+ 		return contours;
+@@ -764,7 +764,7 @@
+ 
+ 			// create continuous curve formed only by circulinear elements
+ 			// and add it to the set of curves
+-			contours.add(BoundaryPolyCirculinearCurve2D.create(elements, true));
++			contours.add(BoundaryPolyCirculinearCurve2D.createBoundaryPolyCirculinearCurve2D(elements, true));
+ 		}
+ 
+ 		// Process other curves, while there are intersections left
+@@ -807,7 +807,7 @@
+ 
+ 			// create continuous curve formed only by circulinear elements
+ 			// and add it to the set of curves
+-			contours.add(BoundaryPolyCirculinearCurve2D.create(elements, true));
++			contours.add(BoundaryPolyCirculinearCurve2D.createBoundaryPolyCirculinearCurve2D(elements, true));
+ 		}
+ 
+ 		return contours;
+Index: src/main/java/math/geom2d/circulinear/GenericCirculinearRing2D.java
+===================================================================
+--- src/main/java/math/geom2d/circulinear/GenericCirculinearRing2D.java	(revision 375)
++++ src/main/java/math/geom2d/circulinear/GenericCirculinearRing2D.java	(working copy)
+@@ -38,7 +38,7 @@
+      * @since 0.8.1
+      */
+     public static <T extends CirculinearElement2D> GenericCirculinearRing2D
+-    create(Collection<T> curves) {
++    createGenericCirculinearRing2D(Collection<T> curves) {
+     	return new GenericCirculinearRing2D(curves);
+     }
+     
+Index: src/main/java/math/geom2d/circulinear/PolyCirculinearCurve2D.java
+===================================================================
+--- src/main/java/math/geom2d/circulinear/PolyCirculinearCurve2D.java	(revision 375)
++++ src/main/java/math/geom2d/circulinear/PolyCirculinearCurve2D.java	(working copy)
+@@ -37,7 +37,7 @@
+      * @since 0.8.1
+      */
+     public static <T extends CirculinearContinuousCurve2D> 
+-    PolyCirculinearCurve2D<T> create(Collection<T> curves) {
++    PolyCirculinearCurve2D<T> createPolyCirculinearCurve2D(Collection<T> curves) {
+     	return new PolyCirculinearCurve2D<T>(curves);
+     }
+     
+@@ -57,7 +57,7 @@
+      * @since 0.9.0
+      */
+     public static <T extends CirculinearContinuousCurve2D> 
+-    PolyCirculinearCurve2D<T> create(Collection<T> curves, boolean closed) {
++    PolyCirculinearCurve2D<T> createPolyCirculinearCurve2D(Collection<T> curves, boolean closed) {
+     	return new PolyCirculinearCurve2D<T>(curves, closed);
+     }
+     
+Index: src/main/java/math/geom2d/circulinear/buffer/BufferCalculator.java
+===================================================================
+--- src/main/java/math/geom2d/circulinear/buffer/BufferCalculator.java	(revision 375)
++++ src/main/java/math/geom2d/circulinear/buffer/BufferCalculator.java	(working copy)
+@@ -148,7 +148,7 @@
+ 			getParallelElements(contour, dist);
+ 		
+ 		// Create a new boundary with the set of parallel curves
+-		return BoundaryPolyCirculinearCurve2D.create(parallelCurves, 
++		return BoundaryPolyCirculinearCurve2D.createBoundaryPolyCirculinearCurve2D(parallelCurves, 
+ 				contour.isClosed());
+ 	}
+ 	
+@@ -170,7 +170,7 @@
+ 		
+ 		// Create a new circulinear continuous curve with the set of parallel
+ 		// curves
+-		return PolyCirculinearCurve2D.create(parallelCurves, curve.isClosed());
++		return PolyCirculinearCurve2D.createPolyCirculinearCurve2D(parallelCurves, curve.isClosed());
+ 	}
+ 	
+ 	private Collection<CirculinearContinuousCurve2D> getParallelElements(
+@@ -503,9 +503,9 @@
+ 		
+ 		// if the curve is closed, return an instance of GenericCirculinearRing2D
+ 		if (curve.isClosed())
+-			return GenericCirculinearRing2D.create(curve.smoothPieces());
++			return GenericCirculinearRing2D.createGenericCirculinearRing2D(curve.smoothPieces());
+ 		
+-		return BoundaryPolyCirculinearCurve2D.create(curve.smoothPieces());
++		return BoundaryPolyCirculinearCurve2D.createBoundaryPolyCirculinearCurve2D(curve.smoothPieces());
+ 	}
+ 	
+ 	private double getDistanceCurveSingularPoints(
+Index: src/main/java/math/geom2d/curve/CurveArray2D.java
+===================================================================
+--- src/main/java/math/geom2d/curve/CurveArray2D.java	(revision 375)
++++ src/main/java/math/geom2d/curve/CurveArray2D.java	(working copy)
+@@ -57,7 +57,7 @@
+      * curves.
+      * @since 0.8.1
+      */
+-    public static <T extends Curve2D> CurveArray2D<T> create(
++    public static <T extends Curve2D> CurveArray2D<T> createCurvedArray(
+     		Collection<T> curves) {
+     	return new CurveArray2D<T>(curves);
+     }
+Index: src/main/java/math/geom2d/domain/BoundaryPolyCurve2D.java
+===================================================================
+--- src/main/java/math/geom2d/domain/BoundaryPolyCurve2D.java	(revision 375)
++++ src/main/java/math/geom2d/domain/BoundaryPolyCurve2D.java	(working copy)
+@@ -50,7 +50,7 @@
+      * of curves.
+      * @since 0.8.1
+      */
+-    public static <T extends ContinuousOrientedCurve2D> BoundaryPolyCurve2D<T> create(
++    public static <T extends ContinuousOrientedCurve2D> BoundaryPolyCurve2D<T> createBoundaryPolyCurve2D(
+     		Collection<T> curves) {
+     	return new BoundaryPolyCurve2D<T>(curves);
+     }
+Index: src/main/java/math/geom2d/domain/ContourArray2D.java
+===================================================================
+--- src/main/java/math/geom2d/domain/ContourArray2D.java	(revision 375)
++++ src/main/java/math/geom2d/domain/ContourArray2D.java	(working copy)
+@@ -54,7 +54,7 @@
+      * contours.
+      * @since 0.8.1
+      */
+-    public static <T extends Contour2D> ContourArray2D<T> create(
++    public static <T extends Contour2D> ContourArray2D<T> createContourArray2D(
+     		Collection<T> curves) {
+     	return new ContourArray2D<T>(curves);
+     }
+Index: src/main/java/math/geom2d/domain/DomainArray2D.java
+===================================================================
+--- src/main/java/math/geom2d/domain/DomainArray2D.java	(revision 375)
++++ src/main/java/math/geom2d/domain/DomainArray2D.java	(working copy)
+@@ -28,7 +28,7 @@
+ public class DomainArray2D<T extends Domain2D> extends ShapeArray2D<T> 
+ implements DomainSet2D<T> {
+ 
+-	public static <D extends Domain2D> DomainArray2D<D> create(Collection<D> array) {
++	public static <D extends Domain2D> DomainArray2D<D> createDomainArray2D(Collection<D> array) {
+ 		return new DomainArray2D<D>(array);
+ 	}
+ 	
+Index: src/main/java/math/geom2d/domain/PolyOrientedCurve2D.java
+===================================================================
+--- src/main/java/math/geom2d/domain/PolyOrientedCurve2D.java	(revision 375)
++++ src/main/java/math/geom2d/domain/PolyOrientedCurve2D.java	(working copy)
+@@ -67,7 +67,7 @@
+      * @since 0.8.1
+      */
+     public static <T extends ContinuousOrientedCurve2D> PolyOrientedCurve2D<T>
+-    create(Collection<T> curves) {
++    createPolyOrientedCurve2D(Collection<T> curves) {
+     	return new PolyOrientedCurve2D<T>(curves);
+     }
+     
+@@ -97,7 +97,7 @@
+      * @since 0.9.0
+      */
+     public static <T extends ContinuousOrientedCurve2D> PolyOrientedCurve2D<T>
+-    create(Collection<T> curves, boolean closed) {
++    createPolyOrientedCurve2D(Collection<T> curves, boolean closed) {
+     	return new PolyOrientedCurve2D<T>(curves, closed);
+     }
+     
+Index: src/main/java/math/geom2d/polygon/LinearRing2D.java
+===================================================================
+--- src/main/java/math/geom2d/polygon/LinearRing2D.java	(revision 375)
++++ src/main/java/math/geom2d/polygon/LinearRing2D.java	(working copy)
+@@ -200,7 +200,7 @@
+ 
+     public CirculinearRing2D parallel(double dist) {
+ 		BufferCalculator bc = BufferCalculator.getDefaultInstance();
+-		return GenericCirculinearRing2D.create(
++		return GenericCirculinearRing2D.createGenericCirculinearRing2D(
+     			bc.createContinuousParallel(this, dist).smoothPieces());
+     }
+     
+Index: src/test/java/math/geom2d/curve/CurveArray2DTest.java
+===================================================================
+--- src/test/java/math/geom2d/curve/CurveArray2DTest.java	(revision 375)
++++ src/test/java/math/geom2d/curve/CurveArray2DTest.java	(working copy)
+@@ -37,21 +37,21 @@
+ 
+ public class CurveArray2DTest extends TestCase {
+ 
+-	public void testCreateArray() {
+-		Point2D p1 = new Point2D(0, 0);
+-		Point2D p2 = new Point2D(10, 0);
+-		Point2D p3 = new Point2D(10, 10);
+-		Point2D p4 = new Point2D(0, 10);
+-		LineSegment2D seg1 = new LineSegment2D(p1, p2);
+-		LineSegment2D seg2 = new LineSegment2D(p2, p3);
+-		LineSegment2D seg3 = new LineSegment2D(p3, p4);
+-		CurveArray2D<LineSegment2D> set = 
+-			CurveArray2D.create(seg1, seg2, seg3);
+-		assertEquals(3, set.size());
+-		assertTrue(set.contains(seg1));
+-		assertTrue(set.contains(seg2));
+-		assertTrue(set.contains(seg3));
+-	}
++	public void testCreateCurvedArrayArray() {
++			Point2D p1 = new Point2D(0, 0);
++			Point2D p2 = new Point2D(10, 0);
++			Point2D p3 = new Point2D(10, 10);
++			Point2D p4 = new Point2D(0, 10);
++			LineSegment2D seg1 = new LineSegment2D(p1, p2);
++			LineSegment2D seg2 = new LineSegment2D(p2, p3);
++			LineSegment2D seg3 = new LineSegment2D(p3, p4);
++			CurveArray2D<LineSegment2D> set = 
++				CurveArray2D.create(seg1, seg2, seg3);
++			assertEquals(3, set.size());
++			assertTrue(set.contains(seg1));
++			assertTrue(set.contains(seg2));
++			assertTrue(set.contains(seg3));
++		}
+ 	
+ 	public void testGetPosition() {
+ 		double r = 10;
